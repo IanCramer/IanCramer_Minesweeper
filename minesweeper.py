@@ -34,6 +34,8 @@ class Minesweeper(object):
 		self.width = width
 		if num_mines <= 0:
 			self.num_mines = (height*width)/10
+			if self.num_mines <= 0:
+				self.num_mines = 1
 		else:
 			self.num_mines = num_mines
 
