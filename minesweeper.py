@@ -187,64 +187,26 @@ class Minesweeper(object):
 		"""
 		Facilitates playing the game. Takes an event and changes the gui accordingly.
 		"""
-		if self.game_over:
-			return
-
-		square_id = self.canvas.find_closest(event.x, event.y)[0]
-		x = (square_id-1)%self.width
-		y = int((square_id-1)/self.width)
-		
-		if self.explore(x,y):
-			self.bomb()
-		else:
-			self.check_win()
-
-	def play_flag(self, event):
-		if self.game_over:
-			return
-
 		items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
 		square_id = items[0]
 		x = (square_id-1)%self.width
 		y = int((square_id-1)/self.width)
 
-		# Valid Location?
-		if x < 0 or y < 0 or x >= self.width or y >= self.height:
-			return False
+		if self.game_over:
+			return
 
-		# Flag Location?
-		if self.status[y][x] == 'None':
-			self.status[y][x] = 'Flagged'
-
-			tile = self.id(x,y)
-			self.canvas.itemconfig(self.id(x,y), fill=self.flag_color)
-
-			w = x*self.tile_size+(self.tile_size/2)
-			z = y*self.tile_size+(self.tile_size/2)
-			self.canvas.create_text(w, z, text='F')
-
-			return True
-
-		# Unflag Location?
-		if self.status[y][x] == 'Flagged':
-			self.status[y][x] = 'None'
-
-			tile = self.id(x,y)
-			self.canvas.itemconfig(self.id(x,y), fill=self.base_color)
-
-			try:
-				self.canvas.itemconfig(items[1], text=' ')
-			except:
-				k = self.tile_size/3
-				items = self.canvas.find_overlapping(event.x-k, event.y-k, event.x+k, event.y+k)
-				self.canvas.itemconfig(items[-1], text=' ')
-
-			return True
-		
+		if self.explore(x,y):
+			self.bomb()
+		else:
+			self.check_win()
 
 	def explore(self, x, y):
 		# Valid Location?
 		if x < 0 or y < 0 or x >= self.width or y >= self.height:
+			return False
+
+		# Flagged Location
+		if self.status[y][x] == 'Flagged':
 			return False
 
 		# Found a Bomb
@@ -280,6 +242,51 @@ class Minesweeper(object):
 
 		# No Bombs
 		return False
+
+	def play_flag(self, event):
+		items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
+		square_id = items[0]
+		x = (square_id-1)%self.width
+		y = int((square_id-1)/self.width)
+
+		if self.game_over:
+			return
+
+		# Valid Location?
+		if x < 0 or y < 0 or x >= self.width or y >= self.height:
+			return False
+
+		# Flag Location?
+		if self.status[y][x] == 'None':
+			self.status[y][x] = 'Flagged'
+
+			tile = self.id(x,y)
+			self.canvas.itemconfig(self.id(x,y), fill=self.flag_color)
+
+			w = x*self.tile_size+(self.tile_size/2)
+			z = y*self.tile_size+(self.tile_size/2)
+			self.canvas.create_text(w, z, text='F')
+
+			return True
+
+		# Unflag Location?
+		if self.status[y][x] == 'Flagged':
+			self.status[y][x] = 'None'
+
+			tile = self.id(x,y)
+			self.canvas.itemconfig(self.id(x,y), fill=self.base_color)
+
+			try:
+				self.canvas.itemconfig(items[1], text=' ')
+			except:
+				k = self.tile_size/3
+				items = self.canvas.find_overlapping(event.x-k, event.y-k, event.x+k, event.y+k)
+				self.canvas.itemconfig(items[-1], text=' ')
+
+			return True
+		
+
+	
 
 	def id(self,x,y):
 		return (y*self.width)+x+1
