@@ -181,7 +181,9 @@ class Minesweeper(object):
 		self.win_lose_label = tkinter.Label(self.root, text='', width=20)
 		self.win_lose_label.grid()
 
-
+	def id(self,x,y):
+		# Returns the id token for the board square at the x^th column and y^th
+		return (y*self.width)+x+1
 
 	def play_explore(self, event):
 		"""
@@ -250,7 +252,7 @@ class Minesweeper(object):
 		y = int((square_id-1)/self.width)
 
 		if self.game_over:
-			return
+			return False
 
 		# Valid Location?
 		if x < 0 or y < 0 or x >= self.width or y >= self.height:
@@ -277,20 +279,21 @@ class Minesweeper(object):
 			self.canvas.itemconfig(self.id(x,y), fill=self.base_color)
 
 			try:
-				self.canvas.itemconfig(items[1], text=' ')
+				self.canvas.itemconfig(items[-1], text='')
+				self.canvas.delete(items[-1])
 			except:
 				k = self.tile_size/3
 				items = self.canvas.find_overlapping(event.x-k, event.y-k, event.x+k, event.y+k)
-				self.canvas.itemconfig(items[-1], text=' ')
+				try:
+					self.canvas.itemconfig(items[-1], text='')
+					self.canvas.delete(items[-1])
+				except:
+					# Unflagging Did Not Work
+					self.status[y][x] = 'Flagged'
+					self.canvas.itemconfig(self.id(x,y), fill=self.flag_color)
+					return False
 
 			return True
-		
-
-	
-
-	def id(self,x,y):
-		return (y*self.width)+x+1
-
 
 
 	def bomb(self):
