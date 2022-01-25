@@ -189,13 +189,16 @@ class Minesweeper(object):
 		"""
 		Facilitates playing the game. Takes an event and changes the gui accordingly.
 		"""
-		items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
-		square_id = items[0]
-		x = (square_id-1)%self.width
-		y = int((square_id-1)/self.width)
-
 		if self.game_over:
-			return
+			return False
+
+		try:
+			items = self.canvas.find_overlapping(event.x,event.y,event.x,event.y)
+			square_id = items[0]
+			x = (square_id-1)%self.width
+			y = int((square_id-1)/self.width)
+		except:
+			return False
 
 		if self.explore(x,y):
 			self.bomb()
@@ -246,12 +249,15 @@ class Minesweeper(object):
 		return False
 
 	def play_flag(self, event):
-		items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
-		square_id = items[0]
-		x = (square_id-1)%self.width
-		y = int((square_id-1)/self.width)
-
 		if self.game_over:
+			return False
+
+		try:
+			items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
+			square_id = items[0]
+			x = (square_id-1)%self.width
+			y = int((square_id-1)/self.width)
+		except:
 			return False
 
 		# Valid Location?
