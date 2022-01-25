@@ -128,6 +128,8 @@ class Minesweeper(object):
 			self.num_mines = m
 		except:
 			self.num_mines = int((self.width*self.height)/10)
+			if not self.num_mines:
+				self.num_mines = 1
 
 		self.make_status()
 		self.make_mines()
