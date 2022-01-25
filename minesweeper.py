@@ -52,7 +52,6 @@ class Minesweeper(object):
 
 		# Start the clock
 		self.start = datetime.datetime.now()
-		print(self.start)
 ################################################
 
 	# Game Data
@@ -175,7 +174,7 @@ class Minesweeper(object):
 				id = self.canvas.create_rectangle(self.tile_size * column, self.tile_size * row, self.tile_size * (column + 1), self.tile_size * (row + 1), fill=self.base_color)
 				self.board.append(id)
 
-		self.win_lose_label = tkinter.Label(self.root, text='Will Be Here', width=20)
+		self.win_lose_label = tkinter.Label(self.root, text='', width=20)
 		self.win_lose_label.grid()
 
 
