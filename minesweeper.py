@@ -10,6 +10,7 @@ import tkinter
 import sys
 import random
 import datetime
+import platform
 
 
 
@@ -169,8 +170,13 @@ class Minesweeper(object):
 		"""
 		self.canvas = tkinter.Canvas(self.root, width=self.tile_size * self.width, height=self.tile_size * self.height)
 		self.canvas.grid()
+
 		self.canvas.bind('<Button-1>', self.play_explore)
-		self.canvas.bind('<Button-3>', self.play_flag)
+
+		rc_name = '<Button-3>'
+		if platform.system() == 'Darwin':
+			rc_name = '<Button-2>'
+		self.canvas.bind(rc_name, self.play_flag)
 
 		self.board = []
 		for row in range(self.height):
